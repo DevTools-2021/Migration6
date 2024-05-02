@@ -1,0 +1,35 @@
+name: Fetch Pull Requests Info
+
+on:
+  push
+
+jobs:
+  fetch-pull-requests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Install curl and jq
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl jq
+      
+    - name: Fetch Pull Request Info and store in file
+      run: |
+        curl -s "https://api.github.com/repos/trainee-org/Yash-repo/pulls" \
+        -H "Authorization: Bearer ${{ secrets.PAT }}" \
+        | jq -r '.[] | "\(.title) - \(.html_url)"' > pull_requests_info.txt
+        
+    - name: Set up Git
+      run: |
+        git config --global user.email "yashwanths@devtools.in"
+        git config --global user.name "Yashwanth-kumar-s"
+        git remote set-url origin "https://github.com/DevTools-2021/Migration6"
+        
+    - name: Commit and push changes
+      run: |
+        git add pull_requests_info.txt
+        git commit -m "Update pull request info"
+        git push
