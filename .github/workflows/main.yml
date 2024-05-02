@@ -20,7 +20,7 @@ jobs:
       run: |
         curl -s "https://api.github.com/repos/trainee-org/Yash-repo/pulls" \
         -H "Authorization: Bearer ${{ secrets.PAT }}" \
-        | jq -r '.[] | "\(.title) - \(.html_url)"' > pull_requests_info.txt
+        | jq -r '.[] | "\(.title) - \(.number)"' > pull_requests_info.txt
         
     - name: Set up Git
       run: |
